@@ -45,11 +45,11 @@ int main(int argc, char **argv) {
                 printf("%d %d %d\n", *(*(*(blocks+i)+j)), *(*(*(blocks+i)+j)+1), *(*(*(blocks+i)+j)+2));
         }
     }
-	
+
 	// Print out original Sudoku grid
     printf("Printing Sudoku before being solved:\n");
     printSudoku(blocks);
-
+    
 	// Call solveSudoku and print out result
     printf("\nSolving Sudoku...\n\n");
     if(solveSudoku(blocks)){
@@ -64,43 +64,157 @@ int main(int argc, char **argv) {
 
 
 void printSudoku(int*** arr){
-	// This function will print out the complete Sudoku grid (arr). It must produce the output in the SAME format as the samples in the instructions. 	
-	
+	// This function will print out the complete Sudoku grid (arr). It must produce the output in the SAME format as the samples in the instructions.
+
 	// Your implementation here
 
-	int i, j ,k;
-	
-	for( i = 0; i < 9; i ++){
-		for(j = 0; j < 3; j ++){
-	             printf("%d %d %d\n" , *(*(*(arr+i)+j)), *(*(*(arr+i)+j) + 1), *(*(*(arr+i)+j) + 2));
-		}
-	}
-	
+   int row, column ,k, m;
+  
+   for(row = 0; row < 9; row++){
+       if(row == 3 || row == 6){
+           printf("---------------------\n");
+       }
+       for(column = 0; column < 3; column++){
+        
+           if(row == 0){
+                if(column == 0){
+                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
+                }
+                if(column == 1){
+                    printf("%d %d %d ", *(*(*(arr+(row+1))+(column-1))), *(*(*(arr+(row+1))+(column-1))+1), *(*(*(arr+(row+1))+(column-1))+2));
+                }
+                if(column == 2){
+                    printf("%d %d %d ", *(*(*(arr+(row+2))+(column-2))), *(*(*(arr+(row+2))+(column-2))+1), *(*(*(arr+(row+2))+(column-2))+2));
+                }
+                if(column == 0 || column == 1|| column == 2){
+                    printf("|");
+                }
+            }  
+            if(row == 1){
+                if(column == 0){
+                     printf("%d %d %d ", *(*(*(arr+(row-1))+(column+1))), *(*(*(arr+(row-1))+(column+1))+1), *(*(*(arr+(row-1))+(column+1))+2));
+                }
+                if(column == 1){
+                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
+                }
+                if(column == 2){
+                    printf("%d %d %d ", *(*(*(arr+(row+1))+(column-1))), *(*(*(arr+(row+1))+(column-1))+1), *(*(*(arr+(row+1))+(column-1))+2));
+                }
+                 if(column == 0 || column == 1|| column == 2){
+                    printf("|");
+                }
+                
+            }
+            if(row == 2){
+                if(column == 0){
+                    printf("%d %d %d ", *(*(*(arr+(row-2))+(column+2))), *(*(*(arr+(row-2))+(column+2))+1), *(*(*(arr+(row-2))+(column+2))+2));
+                }
+                if(column == 1){
+                    printf("%d %d %d ", *(*(*(arr+(row-1))+(column+1))), *(*(*(arr+(row-1))+(column+1))+1), *(*(*(arr+(row-1))+(column+1))+2));
+                }
+                if(column == 2){
+                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
+                }
+                 if(column == 0 || column == 1|| column == 2){
+                    printf("|");
+                }                                  
+            }
+            if(row == 3){
+                if(column == 0){
+                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
+                }
+                if(column == 1){
+                    printf("%d %d %d ", *(*(*(arr+(row+1))+(column-1))), *(*(*(arr+(row+1))+(column-1))+1), *(*(*(arr+(row+1))+(column-1))+2));
+                }
+                if(column == 2){
+                    printf("%d %d %d ", *(*(*(arr+(row+2))+(column-2))), *(*(*(arr+(row+2))+(column-2))+1), *(*(*(arr+(row+2))+(column-2))+2));
+                }
+                if(column == 0 || column == 1|| column == 2){
+                    printf("|");
+                }                              
+            }
+             if(row == 4){
+                if(column == 0){
+                     printf("%d %d %d ", *(*(*(arr+(row-1))+(column+1))), *(*(*(arr+(row-1))+(column+1))+1), *(*(*(arr+(row-1))+(column+1))+2));
+                }
+                if(column == 1){
+                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
+                }
+                if(column == 2){
+                    printf("%d %d %d ", *(*(*(arr+(row+1))+(column-1))), *(*(*(arr+(row+1))+(column-1))+1), *(*(*(arr+(row+1))+(column-1))+2));
+                }
+                 if(column == 0 || column == 1|| column == 2){
+                    printf("|");
+                }                            
+            }
+             if(row == 5){
+                if(column == 0){
+                    printf("%d %d %d ", *(*(*(arr+(row-2))+(column+2))), *(*(*(arr+(row-2))+(column+2))+1), *(*(*(arr+(row-2))+(column+2))+2));
+                }
+                if(column == 1){
+                    printf("%d %d %d ", *(*(*(arr+(row-1))+(column+1))), *(*(*(arr+(row-1))+(column+1))+1), *(*(*(arr+(row-1))+(column+1))+2));
+                }
+                if(column == 2){
+                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
+                }
+                 if(column == 0 || column == 1|| column == 2){
+                    printf("|");
+                }                                   
+            }
+            if(row == 6){
+                if(column == 0){
+                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
+                }
+                if(column == 1){
+                    printf("%d %d %d ", *(*(*(arr+(row+1))+(column-1))), *(*(*(arr+(row+1))+(column-1))+1), *(*(*(arr+(row+1))+(column-1))+2));
+                }
+                if(column == 2){
+                    printf("%d %d %d ", *(*(*(arr+(row+2))+(column-2))), *(*(*(arr+(row+2))+(column-2))+1), *(*(*(arr+(row+2))+(column-2))+2));
+                }
+                if(column == 0 || column == 1|| column == 2){
+                    printf("|");
+                }                              
+            }
+             if(row == 7){
+                if(column == 0){
+                     printf("%d %d %d ", *(*(*(arr+(row-1))+(column+1))), *(*(*(arr+(row-1))+(column+1))+1), *(*(*(arr+(row-1))+(column+1))+2));
+                }
+                if(column == 1){
+                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
+                }
+                if(column == 2){
+                    printf("%d %d %d ", *(*(*(arr+(row+1))+(column-1))), *(*(*(arr+(row+1))+(column-1))+1), *(*(*(arr+(row+1))+(column-1))+2));
+                }
+                 if(column == 0 || column == 1|| column == 2){
+                    printf("|");
+                }                            
+            }
+             if(row == 8){
+                if(column == 0){
+                    printf("%d %d %d ", *(*(*(arr+(row-2))+(column+2))), *(*(*(arr+(row-2))+(column+2))+1), *(*(*(arr+(row-2))+(column+2))+2));
+                }
+                if(column == 1){
+                    printf("%d %d %d ", *(*(*(arr+(row-1))+(column+1))), *(*(*(arr+(row-1))+(column+1))+1), *(*(*(arr+(row-1))+(column+1))+2));
+                }
+                if(column == 2){
+                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
+                }
+                 if(column == 0 || column == 1|| column == 2){
+                    printf("|");
+                }                                   
+            }          
+        }
+        printf("\n");
+    }
 }
-
-
 
 int solveSudoku(int*** blocks){
 	// This is the function to solve the Sudoku (blocks). Feel free to use any helper functions.
 	// YOU MUST NOT USE ANY ARRAY NOTATION ([])!
-	
+
 	//Your implementation here
+    
 
 	return 0;
 }
 
-void printSudokuGrid(){
-	int i, j;
-
-	
-
-
-
-
-
-
-
-
-
-
-}
