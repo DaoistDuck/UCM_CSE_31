@@ -8,7 +8,19 @@ int solveSudoku(int***);
 
 //Helper functions. You can define any functions that can help your solve the problem
 
-void printSudokuGrid();
+int findingZeros(int *** blocks);
+
+int numberUsedInRow(int *** blocks, int row, int grid, int number);
+
+
+int numberUsedInColumn(int *** blocks, int column, int grid, int number);
+
+
+int numberUsedInBox(int *** blocks, int row, int column, int grid, int number);
+
+
+int isSafeToPlugInNumber(int *** blocks, int row, int column, int grid, int number);
+
 
 
 /*
@@ -66,146 +78,25 @@ int main(int argc, char **argv) {
 void printSudoku(int*** arr){
 	// This function will print out the complete Sudoku grid (arr). It must produce the output in the SAME format as the samples in the instructions.
 
-	// Your implementation here
-
-   int row, column ,k, m;
-  
-   for(row = 0; row < 9; row++){
-       if(row == 3 || row == 6){
-           printf("---------------------\n");
-       }
-       for(column = 0; column < 3; column++){
-        
-           if(row == 0){
-                if(column == 0){
-                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
-                }
-                if(column == 1){
-                    printf("%d %d %d ", *(*(*(arr+(row+1))+(column-1))), *(*(*(arr+(row+1))+(column-1))+1), *(*(*(arr+(row+1))+(column-1))+2));
-                }
-                if(column == 2){
-                    printf("%d %d %d ", *(*(*(arr+(row+2))+(column-2))), *(*(*(arr+(row+2))+(column-2))+1), *(*(*(arr+(row+2))+(column-2))+2));
-                }
-                if(column == 0 || column == 1|| column == 2){
-                    printf("|");
-                }
-            }  
-            if(row == 1){
-                if(column == 0){
-                     printf("%d %d %d ", *(*(*(arr+(row-1))+(column+1))), *(*(*(arr+(row-1))+(column+1))+1), *(*(*(arr+(row-1))+(column+1))+2));
-                }
-                if(column == 1){
-                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
-                }
-                if(column == 2){
-                    printf("%d %d %d ", *(*(*(arr+(row+1))+(column-1))), *(*(*(arr+(row+1))+(column-1))+1), *(*(*(arr+(row+1))+(column-1))+2));
-                }
-                 if(column == 0 || column == 1|| column == 2){
-                    printf("|");
-                }
-                
+  	// Your implementation here
+    int row, column, location ,grid, puzzle = 3; // grid 0-2 is the first 3x3 row, 3-5 is the second 3x3 row, 6-8 is the third 3x3 row
+    for(grid = 0; grid < 9; grid += 3){
+        for(row = 0; row < 3; row ++){ // row 0 is the first row of all 3x3, row 1 is the second row of all 3x3, row 2 is the third row of all 3x3
+            for(location = grid; location < puzzle; location++){
+                for(column = 0; column < 3; column++){
+                    printf("%d ", *(*(*(arr + location)+row)+column));
+                    if(column == 2){
+                        printf("|");
+                    }                
+                }              
             }
-            if(row == 2){
-                if(column == 0){
-                    printf("%d %d %d ", *(*(*(arr+(row-2))+(column+2))), *(*(*(arr+(row-2))+(column+2))+1), *(*(*(arr+(row-2))+(column+2))+2));
-                }
-                if(column == 1){
-                    printf("%d %d %d ", *(*(*(arr+(row-1))+(column+1))), *(*(*(arr+(row-1))+(column+1))+1), *(*(*(arr+(row-1))+(column+1))+2));
-                }
-                if(column == 2){
-                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
-                }
-                 if(column == 0 || column == 1|| column == 2){
-                    printf("|");
-                }                                  
-            }
-            if(row == 3){
-                if(column == 0){
-                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
-                }
-                if(column == 1){
-                    printf("%d %d %d ", *(*(*(arr+(row+1))+(column-1))), *(*(*(arr+(row+1))+(column-1))+1), *(*(*(arr+(row+1))+(column-1))+2));
-                }
-                if(column == 2){
-                    printf("%d %d %d ", *(*(*(arr+(row+2))+(column-2))), *(*(*(arr+(row+2))+(column-2))+1), *(*(*(arr+(row+2))+(column-2))+2));
-                }
-                if(column == 0 || column == 1|| column == 2){
-                    printf("|");
-                }                              
-            }
-             if(row == 4){
-                if(column == 0){
-                     printf("%d %d %d ", *(*(*(arr+(row-1))+(column+1))), *(*(*(arr+(row-1))+(column+1))+1), *(*(*(arr+(row-1))+(column+1))+2));
-                }
-                if(column == 1){
-                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
-                }
-                if(column == 2){
-                    printf("%d %d %d ", *(*(*(arr+(row+1))+(column-1))), *(*(*(arr+(row+1))+(column-1))+1), *(*(*(arr+(row+1))+(column-1))+2));
-                }
-                 if(column == 0 || column == 1|| column == 2){
-                    printf("|");
-                }                            
-            }
-             if(row == 5){
-                if(column == 0){
-                    printf("%d %d %d ", *(*(*(arr+(row-2))+(column+2))), *(*(*(arr+(row-2))+(column+2))+1), *(*(*(arr+(row-2))+(column+2))+2));
-                }
-                if(column == 1){
-                    printf("%d %d %d ", *(*(*(arr+(row-1))+(column+1))), *(*(*(arr+(row-1))+(column+1))+1), *(*(*(arr+(row-1))+(column+1))+2));
-                }
-                if(column == 2){
-                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
-                }
-                 if(column == 0 || column == 1|| column == 2){
-                    printf("|");
-                }                                   
-            }
-            if(row == 6){
-                if(column == 0){
-                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
-                }
-                if(column == 1){
-                    printf("%d %d %d ", *(*(*(arr+(row+1))+(column-1))), *(*(*(arr+(row+1))+(column-1))+1), *(*(*(arr+(row+1))+(column-1))+2));
-                }
-                if(column == 2){
-                    printf("%d %d %d ", *(*(*(arr+(row+2))+(column-2))), *(*(*(arr+(row+2))+(column-2))+1), *(*(*(arr+(row+2))+(column-2))+2));
-                }
-                if(column == 0 || column == 1|| column == 2){
-                    printf("|");
-                }                              
-            }
-             if(row == 7){
-                if(column == 0){
-                     printf("%d %d %d ", *(*(*(arr+(row-1))+(column+1))), *(*(*(arr+(row-1))+(column+1))+1), *(*(*(arr+(row-1))+(column+1))+2));
-                }
-                if(column == 1){
-                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
-                }
-                if(column == 2){
-                    printf("%d %d %d ", *(*(*(arr+(row+1))+(column-1))), *(*(*(arr+(row+1))+(column-1))+1), *(*(*(arr+(row+1))+(column-1))+2));
-                }
-                 if(column == 0 || column == 1|| column == 2){
-                    printf("|");
-                }                            
-            }
-             if(row == 8){
-                if(column == 0){
-                    printf("%d %d %d ", *(*(*(arr+(row-2))+(column+2))), *(*(*(arr+(row-2))+(column+2))+1), *(*(*(arr+(row-2))+(column+2))+2));
-                }
-                if(column == 1){
-                    printf("%d %d %d ", *(*(*(arr+(row-1))+(column+1))), *(*(*(arr+(row-1))+(column+1))+1), *(*(*(arr+(row-1))+(column+1))+2));
-                }
-                if(column == 2){
-                    printf("%d %d %d ", *(*(*(arr+row)+column)), *(*(*(arr+row)+column)+1), *(*(*(arr+row)+column)+2));
-                }
-                 if(column == 0 || column == 1|| column == 2){
-                    printf("|");
-                }                                   
-            }          
+            printf("\n");
         }
-        printf("\n");
-    }
+        puzzle += 3;
+        if(grid ==  0 || grid == 3){
+            printf("---------------------\n");
+        }
+    } 
 }
 
 int solveSudoku(int*** blocks){
@@ -213,8 +104,126 @@ int solveSudoku(int*** blocks){
 	// YOU MUST NOT USE ANY ARRAY NOTATION ([])!
 
 	//Your implementation here
-    
 
-	return 0;
+    int row, column, grid, number;
+    
+    if(!findingZeros(blocks)){
+        return 1;
+    }
+
+    for(grid = 0; grid < 9; grid ++){
+        for(row = 0; row < 3; row ++){
+            for(column = 0; column < 3; column++){
+                if(*(*(*(blocks+grid)+row)+column) == 0){
+                    for(number = 1; number <=9; number ++){
+                        if(isSafeToPlugInNumber(blocks, row, column, grid, number)){
+                            *(*(*(blocks+grid)+row)+column) = number;
+
+                            if(solveSudoku(blocks)){
+                                return 1;
+                            }            
+                        }
+                    }
+                    *(*(*(blocks+grid)+row)+column) = 0;
+                    return 0; // this is the recursive part as if its fails, it just reruns solveSudoku
+                }
+            }
+        }
+    }
+    return 1; 
 }
 
+int findingZeros(int *** arr){
+    int row, column, grid;
+    for(grid = 0; grid < 9; grid ++){
+        for(row = 0; row < 3; row ++){
+            for(column = 0; column < 3; column++){
+                if(*(*(*(arr+grid)+row)+column) == 0){
+                    return 1; // if found a zero return true;
+                }              
+            }
+        }
+    }  
+    return 0;
+}
+
+int numberInRow(int *** arr, int row, int grid, int number){ //since each 1 is in 3x3, we just need to check per 3
+    int column = 0;
+    if(grid <=2){ // for this it checks the first 3 3x3 
+        for(grid = 0; grid <= 2; grid++){
+            for(column = 0; column < 3; column++){
+                if(*(*(*(arr + grid)+row)+column) == number){
+                    return 0; // if found the number return false
+                }
+            }
+        }
+    } else if(grid >= 3 && grid <=5){ // checks the second 3 3x3
+        for(grid = 3; grid <= 5; grid++){
+            for(column = 0; column < 3; column++){
+                if(*(*(*(arr + grid)+row)+column) == number){
+                    return 0; // if found the number return false
+                }
+            }
+        }
+    } else{ // checks the last 3 3x3
+        for(grid = 6; grid <= 8; grid++){
+            for(column = 0; column < 3; column++){
+                if(*(*(*(arr + grid)+row)+column) == number){
+                    return 0; // if found the number return false
+                }
+            }
+        }
+    }
+    return 1; // otherwise return true to the number that isnt present in the row
+}
+
+int numberInColumn(int *** arr, int column, int grid, int number){//since its 3 by 3, we have to check column by each grid
+    int row = 0;
+    
+    if(grid == 0 || grid == 3 || grid == 6){ // so since there are 9 3x3, this checks the 1st, 4rd, and 7th 3x3 
+        for(grid = 0; grid <= 6; grid += 3){
+            for(row = 0; row < 3; row ++){
+                if(*(*(*(arr+grid)+row)+column) == number){
+                    return 0; // if found the number return false
+                }
+            }
+        }        
+    } else if(grid == 1 || grid == 4 || grid == 7){// this checks the 2nd, 5th, and 8th 3x3
+        for(grid = 1; grid < 7; grid += 3){
+            for(row = 0; row < 3; row ++){
+                if(*(*(*(arr+grid)+row)+column) == number){
+                    return 0; // if found the number return false           
+                }
+            }
+        } 
+    } else{
+        for(grid = 2; grid < 8; grid += 3){// this checks the 3rd, 6th, and 9th 3x3 
+            for(row = 0; row < 3; row ++){
+                if(*(*(*(arr+grid)+row)+column) == number){
+                    return 0; // if found the number return false            
+                }
+            }
+        } 
+    }
+    return 1; // otherwise return true to the number that isnt present in the column
+}
+
+int numberInBox(int *** arr, int grid, int number){//its already in a 3x3 box
+    int row = 0, column = 0;
+    for(row = 0; row < 3; row ++){ // since the grid tells us which 3x3 box we are looking for, its fine to just check row and column
+        for(column = 0; column < 3; column++){
+            if(*(*(*(arr + grid)+row)+column) == number){
+                return 0; // if found the number return false  
+            }
+        }
+    }  
+    return 1; // otherwise return true to the number that isnt present in the box
+}
+
+int isSafeToPlugInNumber(int *** arr, int row, int column, int grid, int number){//combine all the helper functions into this 1
+    return numberInRow(arr, row, grid, number)
+        && numberInColumn(arr, column, grid, number)
+        && numberInBox(arr, grid, number);
+        //return the opposite because I want to find a number that isnt already there;
+    
+}
