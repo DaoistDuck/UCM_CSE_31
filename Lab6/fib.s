@@ -1,8 +1,10 @@
         .data
 n:      .word 13
+m:      .word 20
 
         .text
 main: 	add     $t0, $0, $zero
+		la      $t4, m
 		addi    $t1, $zero, 1
 		la      $t3, n
 		lw      $t3, 0($t3)
