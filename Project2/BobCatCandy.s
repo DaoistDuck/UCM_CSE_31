@@ -25,7 +25,7 @@ main:
 		#It then prints out a statement about the maximum BobCat Bars the user will receive.
 		
 		
-		addi $sp, $sp -12	# Feel free to change the increment if you need for space.
+		addi $sp, $sp -20	# Feel free to change the increment if you need for space.
 		sw $ra, 0($sp)
 		# Implement your main here
 		
@@ -78,6 +78,32 @@ main:
 		jal maxBars 	# Call maxBars to calculate the maximum number of BobCat Bars
 
 		# Print out final statement here
+		
+		#tells user with the amount of money
+		la  $a0, str8
+		li $v0, 4
+		syscall
+		
+		#displaying the money they have
+		li $v0, 1
+		move $a0, $a2
+		syscall
+		
+		#almost finishes the sentence
+		la  $a0, str9
+		li $v0, 4
+		syscall
+		
+		#displaying amount of candy 
+		li $v0, 1
+		move $a0, $s6
+		syscall
+		
+		# finishes the sentence
+		la  $a0, str10
+		li $v0, 4
+		syscall	
+		
 
 
 
@@ -93,13 +119,14 @@ maxBars:
 		
 		#a1 is the exchange rate
 		
-		#a2 is the money they have
-				
+		#a2 is the money they have	
+		sw $ra, 12($sp)	
 		move $s0, $a0
 		move $s1, $a1
 		move $s2, $a2
 		
-		blt $s2, $s0, amountOfBar
+		blt $s2, $s0, amountOfBars
+		
 		
 		div $s3, $s2, $s0		
 		
@@ -125,8 +152,6 @@ maxBars:
 		
 		jal newBars 	# Call a helper function to keep track of the number of bars.
 		
-
-		
 		jr $ra
 		
 		# End of maxBars
@@ -138,12 +163,12 @@ newBars: #while $s4 > $a0
 	
 		#s3 is the inital amount of BobCat bars you start withs
 		sw $a0, 4($sp)
-			
+		sw $ra, 8($sp)
 		
 		div $s4, $a1, $a0	
 		
 		
-		beq $s4, $zero, amountOfBar			
+		beq $s4, $zero, amountOfBars			
 		#intro exchange amount
 		la  $a0, str6
 		li $v0, 4
@@ -172,41 +197,13 @@ newBars: #while $s4 > $a0
 		jr $ra
 		
 		# End of newBars				
-				
-amountOfBar:		
-		#tells user with the amount of money
-		la  $a0, str8
-		li $v0, 4
-		syscall
-		
-		#displaying the money they have
-		li $v0, 1
-		move $a0, $a2
-		syscall
-		
-		#almost finishes the sentence
-		la  $a0, str9
-		li $v0, 4
-		syscall
-		
-		#displaying amount of candy 
-		li $v0, 1
-		move $a0, $s6
-		syscall
-		
-		# finishes the sentence
-		la  $a0, str10
-		li $v0, 4
-		syscall			
-		
-		j end			
-		
-		#end of noBar
 
-		
+amountOfBars:
+		lw $ra, 12($sp)
+		jr $ra		
 end: 
 		# Terminating the program
 		lw $ra, 0($sp)
-		addi $sp, $sp 12
+		addi $sp, $sp 20
 		li $v0, 10 
 		syscall
