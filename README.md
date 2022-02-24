@@ -1,2 +1,2 @@
 # UCM_CSE_31
-files from CSE31 that I worked on 
+This github repo has my code for my UCM CSE 31 Class using C
